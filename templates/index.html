@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SkinAI - Intelligent Skin Disease Classifier</title>
+  <meta name="description" content="AI-powered skin disease detection. Upload a skin lesion image for instant, research-grade classification using deep learning." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+<!-- ======================================================== -->
+<!-- PARTICLES BACKGROUND -->
+<!-- ======================================================== -->
+<div class="particles" id="particles"></div>
+
+<!-- ======================================================== -->
+<!-- HEADER -->
+<!-- ======================================================== -->
+<header class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 40 40" fill="none">
+          <circle cx="20" cy="20" r="18" stroke="url(#lg1)" stroke-width="2.5"/>
+          <path d="M13 20 Q20 10 27 20 Q20 30 13 20Z" fill="url(#lg2)" opacity="0.9"/>
+          <circle cx="20" cy="20" r="4" fill="white"/>
+          <defs>
+            <linearGradient id="lg1" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#6C63FF"/>
+              <stop offset="1" stop-color="#4ECDC4"/>
+            </linearGradient>
+            <linearGradient id="lg2" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#6C63FF"/>
+              <stop offset="1" stop-color="#4ECDC4"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <span class="logo-text">Skin<span class="logo-ai">AI</span></span>
+    </div>
+    <nav class="nav">
+      <a href="#upload-section" class="nav-link">Analyze</a>
+      <a href="#diseases-section" class="nav-link">Diseases</a>
+      <a href="#about-section" class="nav-link">About</a>
+    </nav>
+    <div class="header-status" id="model-status">
+      <span class="status-dot" id="status-dot"></span>
+      <span id="status-text">Checking...</span>
+    </div>
+  </div>
+</header>
+
+<!-- ======================================================== -->
+<!-- HERO -->
+<!-- ======================================================== -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="badge-dot pulse"></span>
+      AI-Powered Dermatology Assistant
+    </div>
+    <h1 class="hero-title">
+      Detect Skin Diseases<br/>
+      <span class="gradient-text">With AI Precision</span>
+    </h1>
+    <p class="hero-subtitle">
+      Upload a skin lesion image for instant classification across 7 disease types.
+      Powered by EfficientNetB2 trained on 10,000+ dermatoscopic images.
+    </p>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-value">88-92<span class="stat-unit">%</span></div>
+        <div class="stat-label">Accuracy</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <div class="stat-value">7</div>
+        <div class="stat-label">Disease Classes</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <div class="stat-value">&lt;1<span class="stat-unit">s</span></div>
+        <div class="stat-label">Inference Time</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <div class="stat-value">10K+</div>
+        <div class="stat-label">Training Images</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="visual-ring ring-1"></div>
+    <div class="visual-ring ring-2"></div>
+    <div class="visual-ring ring-3"></div>
+    <div class="visual-core">
+      <svg viewBox="0 0 80 80" fill="none" class="visual-icon">
+        <circle cx="40" cy="40" r="36" stroke="rgba(108,99,255,0.4)" stroke-width="2"/>
+        <path d="M25 40 Q40 18 55 40 Q40 62 25 40Z" fill="url(#vh1)"/>
+        <circle cx="40" cy="40" r="8" fill="white" opacity="0.9"/>
+        <circle cx="40" cy="40" r="4" fill="url(#vh2)"/>
+        <defs>
+          <linearGradient id="vh1" x1="25" y1="18" x2="55" y2="62" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#6C63FF"/>
+            <stop offset="1" stop-color="#4ECDC4"/>
+          </linearGradient>
+          <linearGradient id="vh2" x1="36" y1="36" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#6C63FF"/>
+            <stop offset="1" stop-color="#4ECDC4"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================== -->
+<!-- UPLOAD SECTION -->
+<!-- ======================================================== -->
+<section class="upload-section" id="upload-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Analyze Your Image</h2>
+      <p class="section-subtitle">Upload a clear, focused skin lesion image for AI analysis</p>
+    </div>
+
+    <div class="upload-grid">
+      <!-- Upload Zone -->
+      <div class="upload-card">
+        <div class="drop-zone" id="drop-zone">
+          <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.bmp,.webp" hidden />
+          <div class="drop-icon">
+            <svg viewBox="0 0 64 64" fill="none">
+              <circle cx="32" cy="32" r="30" stroke="rgba(108,99,255,0.3)" stroke-width="2" stroke-dasharray="8 4"/>
+              <path d="M32 22 L32 42 M24 30 L32 22 L40 30" stroke="#6C63FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <rect x="20" y="44" width="24" height="3" rx="1.5" fill="#6C63FF" opacity="0.4"/>
+            </svg>
+          </div>
+          <div class="drop-text">
+            <span class="drop-title">Drop your image here</span>
+            <span class="drop-subtitle">or <button class="browse-btn" onclick="document.getElementById('file-input').click()">browse files</button></span>
+          </div>
+          <div class="drop-hint">JPG, PNG, BMP, WebP — max 16 MB</div>
+
+          <!-- Preview -->
+          <div class="image-preview hidden" id="image-preview">
+            <img id="preview-img" src="" alt="Preview" />
+            <button class="remove-btn" id="remove-btn" title="Remove image">✕</button>
+          </div>
+        </div>
+
+        <button class="analyze-btn" id="analyze-btn" disabled>
+          <span class="btn-icon">🔬</span>
+          <span class="btn-text">Analyze Image</span>
+          <div class="btn-shimmer"></div>
+        </button>
+
+        <div class="disclaimer-box">
+          <span class="disclaimer-icon">⚠️</span>
+          <span>For <strong>research & education only</strong>. Always consult a qualified dermatologist for medical decisions.</span>
+        </div>
+      </div>
+
+      <!-- Results Panel -->
+      <div class="results-panel" id="results-panel">
+        <!-- Initial State -->
+        <div class="results-empty" id="results-empty">
+          <div class="empty-icon">🔬</div>
+          <div class="empty-title">Results will appear here</div>
+          <div class="empty-subtitle">Upload and analyze an image to get started</div>
+        </div>
+
+        <!-- Loading State -->
+        <div class="results-loading hidden" id="results-loading">
+          <div class="loading-spinner"></div>
+          <div class="loading-text">Analyzing image...</div>
+          <div class="loading-sub">Running EfficientNetB2 inference</div>
+        </div>
+
+        <!-- No Model State -->
+        <div class="results-no-model hidden" id="results-no-model">
+          <div class="no-model-icon">🤖</div>
+          <div class="no-model-title">Model Not Trained Yet</div>
+          <div class="no-model-body">
+            <p>The AI model needs to be trained before making predictions.</p>
+            <div class="code-block">
+              <span class="code-label">Run in terminal:</span>
+              <code>python skin_disease_classifier.py</code>
+            </div>
+            <p class="no-model-note">Training takes 30 min (GPU) to 12 hours (CPU).</p>
+          </div>
+        </div>
+
+        <!-- Actual Results -->
+        <div class="results-content hidden" id="results-content">
+          <!-- Disease Header -->
+          <div class="result-header" id="result-header">
+            <div class="result-emoji" id="result-emoji"></div>
+            <div class="result-title-block">
+              <div class="result-disease" id="result-disease"></div>
+              <div class="result-risk" id="result-risk"></div>
+            </div>
+            <div class="result-confidence" id="result-confidence"></div>
+          </div>
+
+          <!-- Info Cards -->
+          <div class="info-cards">
+            <div class="info-card">
+              <div class="info-card-label">Description</div>
+              <div class="info-card-value" id="info-description"></div>
+            </div>
+            <div class="info-card">
+              <div class="info-card-label">Symptoms</div>
+              <div class="info-card-value" id="info-symptoms"></div>
+            </div>
+            <div class="info-card">
+              <div class="info-card-label">Treatment</div>
+              <div class="info-card-value" id="info-treatment"></div>
+            </div>
+            <div class="info-card action-card" id="action-card">
+              <div class="info-card-label">⚡ Recommended Action</div>
+              <div class="info-card-value" id="info-action"></div>
+            </div>
+          </div>
+
+          <!-- Confidence Bars -->
+          <div class="confidence-section">
+            <div class="confidence-title">Confidence by Disease Class</div>
+            <div class="confidence-bars" id="confidence-bars"></div>
+          </div>
+
+          <!-- Inference Time -->
+          <div class="inference-info" id="inference-info"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================== -->
+<!-- DISEASES SECTION -->
+<!-- ======================================================== -->
+<section class="diseases-section" id="diseases-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Supported Diseases</h2>
+      <p class="section-subtitle">7 skin condition types classified by our AI model</p>
+    </div>
+    <div class="diseases-grid" id="diseases-grid">
+      <!-- Filled by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================== -->
+<!-- ABOUT SECTION -->
+<!-- ======================================================== -->
+<section class="about-section" id="about-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">About the Model</h2>
+      <p class="section-subtitle">State-of-the-art deep learning for dermatology</p>
+    </div>
+    <div class="about-grid">
+      <div class="about-card">
+        <div class="about-icon">🧠</div>
+        <h3>EfficientNetB2</h3>
+        <p>Transfer learning on ImageNet weights, fine-tuned on 10,015 HAM10000 dermatoscopic images for optimal performance.</p>
+      </div>
+      <div class="about-card">
+        <div class="about-icon">📊</div>
+        <h3>HAM10000 Dataset</h3>
+        <p>Human Against Machine dataset — 10,015 skin lesion images validated by dermatologists with histopathological ground truth.</p>
+      </div>
+      <div class="about-card">
+        <div class="about-icon">🔬</div>
+        <h3>Data Augmentation</h3>
+        <p>Random rotations, flips, zoom, brightness & contrast adjustments to improve generalization and reduce overfitting.</p>
+      </div>
+      <div class="about-card">
+        <div class="about-icon">⚖️</div>
+        <h3>Class Balancing</h3>
+        <p>Weighted loss function to handle the highly imbalanced dataset — critical for rare disease detection like melanoma.</p>
+      </div>
+      <div class="about-card">
+        <div class="about-icon">🎯</div>
+        <h3>Fine-Tuning</h3>
+        <p>Two-stage training: freeze backbone, train head, then unfreeze top layers for domain-specific feature extraction.</p>
+      </div>
+      <div class="about-card">
+        <div class="about-icon">📈</div>
+        <h3>Performance</h3>
+        <p>88-92% validation accuracy, 0.95+ ROC-AUC, with early stopping and learning rate scheduling for optimal convergence.</p>
+      </div>
+    </div>
+
+    <!-- Architecture Flow -->
+    <div class="architecture-flow">
+      <div class="flow-title">Model Pipeline</div>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="flow-step-icon">🖼️</div>
+          <div class="flow-step-label">Input Image<br/><small>Any size</small></div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-icon">✂️</div>
+          <div class="flow-step-label">Resize & Normalize<br/><small>224×224 px</small></div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-icon">🧬</div>
+          <div class="flow-step-label">EfficientNetB2<br/><small>Feature Extraction</small></div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-icon">🔢</div>
+          <div class="flow-step-label">Dense Head<br/><small>512 → 256 units</small></div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-icon">📊</div>
+          <div class="flow-step-label">Softmax<br/><small>7 classes</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================== -->
+<!-- FOOTER -->
+<!-- ======================================================== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="logo">
+          <div class="logo-icon small">
+            <svg viewBox="0 0 40 40" fill="none">
+              <circle cx="20" cy="20" r="18" stroke="url(#fgl)" stroke-width="2.5"/>
+              <path d="M13 20 Q20 10 27 20 Q20 30 13 20Z" fill="url(#fgl2)" opacity="0.9"/>
+              <circle cx="20" cy="20" r="4" fill="white"/>
+              <defs>
+                <linearGradient id="fgl" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#6C63FF"/><stop offset="1" stop-color="#4ECDC4"/>
+                </linearGradient>
+                <linearGradient id="fgl2" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#6C63FF"/><stop offset="1" stop-color="#4ECDC4"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <span class="logo-text">Skin<span class="logo-ai">AI</span></span>
+        </div>
+        <p>Research-grade AI for skin disease classification. Educational use only.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <div class="footer-col-title">Resources</div>
+          <a href="https://www.kaggle.com/datasets/kmader/skin-cancer-mnist-ham10000" target="_blank" rel="noopener">HAM10000 Dataset</a>
+          <a href="https://arxiv.org/abs/1905.11946" target="_blank" rel="noopener">EfficientNet Paper</a>
+          <a href="https://www.nature.com/articles/sdata2018161" target="_blank" rel="noopener">HAM10000 Paper</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">API Endpoints</div>
+          <code>/api/predict</code>
+          <code>/api/diseases</code>
+          <code>/api/model-info</code>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>⚠️ For research & education only — NOT for clinical diagnosis</span>
+      <span>© 2024 SkinAI — MIT License</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
